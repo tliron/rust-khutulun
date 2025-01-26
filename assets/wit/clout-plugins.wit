@@ -1,0 +1,62 @@
+package clout:plugins;
+
+interface host {
+    variant value {
+        null,
+        integer(s64),
+        unsigned-integer(u64),
+        float(f64),
+        boolean(bool),
+        text(string),
+        bytes(list<u8>),
+        value-list(value-list),
+        value-map(value-map),
+    }
+
+    resource value-list {
+        constructor(values: list<value>);
+        get: func() -> list<value>;
+        length: func() -> u64;
+    }
+
+    resource value-map {
+        constructor(kv-pairs: list<tuple<value, value>>);
+        get: func() -> list<tuple<value, value>>;
+        length: func() -> u64;
+    }
+
+    get-clout: func(path: list<value>) -> value;
+}
+
+interface dispatcher {
+    variant value {
+        null,
+        integer(s64),
+        unsigned-integer(u64),
+        float(f64),
+        boolean(bool),
+        text(string),
+        bytes(list<u8>),
+        value-list(value-list),
+        value-map(value-map),
+    }
+
+    resource value-list {
+        constructor(values: list<value>);
+        get: func() -> list<value>;
+        length: func() -> u64;
+    }
+
+    resource value-map {
+        constructor(kv-pairs: list<tuple<value, value>>);
+        get: func() -> list<tuple<value, value>>;
+        length: func() -> u64;
+    }
+
+    dispatch: func(name: string, arguments: list<value>) -> result<value, string>;
+}
+
+world functions {
+    import host;
+    export dispatcher;
+}

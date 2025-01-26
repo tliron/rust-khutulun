@@ -1,0 +1,143 @@
+Wasm in Browser
+===============
+
+Package for web
+https://trunkrs.dev
+
+Using JavaScript as the bridge!
+
+1. JS loads puccini.wasm
+2. JS exports "start_dispatch" to puccini.wasm
+2. puccini.wasm exports "get_dispatch" and "end_dispatch" to JS
+
+4. Puccini calls "start_dispatch" with a number ID for the task
+5. JS calls "get_dispatch" to get information, which includes CBOR of the arguments
+
+5. JS loads plugin.wasm
+6. JS calls plugin.wasm's "dispatch"
+7. JS calls "end_dispatch"
+
+Call JavaScript from Rust WASM
+https://rustwasm.github.io/book/reference/js-ffi.html
+
+Using WASI in the browser requires transpiling it:
+https://component-model.bytecodealliance.org/language-support/javascript.html
+
+RPC
+===
+
+Cap'n Proto for Rust
+
+Cluster
+=======
+
+OpenRaft
+
+TUI
+===
+
+ratatui
+
+SDN
+===
+
+https://kubevious.io/blog/post/comparing-kubernetes-container-network-interface-cni-providers
+
+https://github.com/projectcalico/calico
+
+Rust:
+https://github.com/8xFF/atm0s-sdn
+
+OpenFlow:
+https://www.ovn.org/
+https://github.com/faucetsdn/faucet
+https://github.com/telstra/open-kilda/
+
+Graph DB
+========
+
+https://surrealdb.com/
+https://github.com/surrealdb/surrealdb
+Rust
+source-available, but not open source
+
+https://age.apache.org/
+On top of postgres
+https://github.com/Dzordzu/rust-apache-age
+Uses Cypher: https://opencypher.org/
+Oops: https://github.com/apache/age/issues/2111#issuecomment-2441903180
+
+https://cayley.io/
+no Rust client
+https://github.com/cayleygraph/cayley
+backends: postgres, mysql, mongo,
+Go
+
+https://janusgraph.org/
+https://github.com/JanusGraph/janusgraph
+backends: cassandra, hbase
+Java
+
+https://arangodb.com/
+https://github.com/arangodb/arangodb
+"community edition" limited to 100GB
+https://github.com/fMeow/arangors
+C++
+
+
+Data Model
+==========
+
+1. Types
+   Purely metadata
+2. NodeTemplates
+   Typed (0 or more)
+   Can contain:
+     1. References to other NodeTemplates (recursive)
+     2. References to RelationshipTemplates
+3. RelationshipTemplates
+   Typed (0 or more)
+   Has filters for target node
+4. Nodes
+   Typed
+   Explicit instantiation = copied over from NodeTemplates
+   After they are copied, it is not required to adhere to the origin NodeTemplate anymore
+   The NodeTemplate is not a schema for the Node!
+   Nodes can be created without a NodeTemplate
+5. Relationships
+   Typed (0 or more)
+   Implicit instantiation = when the NodeTemplate is instantiated, its referred RelationshipTemplates are instantiated
+   Nodes instantiated by the referring NodeTemplate are the Relationship source
+   The filter is used to select the Relationship target
+   Copied over from RelationshipTemplate
+   After they are copied, it is not required to adhere to the origin RelationshipTemplate anymore
+   The RelationshipTemplate is not a schema for the Relationship!
+   Relationships can be created without a RelationshipTemplate
+
+
+How Instantiation Works
+=======================
+
+1. Iterate clout::NodeTemplate => 0 or more clout::Node
+   Instantiation plugins
+2. Recurse into child clout::NodeTemplate
+3. clout::RelationshipTemplate => 0 or more clout::Relationship
+
+How Update Works
+================
+
+1. Iterate all clout::Node, clout::Relationship
+   Pre-update plugins
+2. Iterate all properties that are not "evaluated"
+3. Eval expression -> value
+   And mark as "evaluated"
+   During this phase we check for required property errors
+4. Unmark all "evaluated"
+5. Post-update plugins
+
+How Events Work
+===============
+
+1. Event defined by interface Type + operation
+2. Iterate all clout::Node, clout::Relationship
+3. Call

@@ -1,0 +1,42 @@
+[package]
+edition = "2021"
+
+name = "khutulun-clout"
+description = "Clout"
+version = "0.0.1"
+rust-version = "1.84"
+
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/tliron/rust-khutulun"
+documentation = "https://docs.rs/khutulun"
+authors = ["Tal Liron"]
+
+readme = "../../README.md"
+
+categories = []                                                            # https://crates.io/category_slugs
+keywords = ["cloud", "orchestration", "wasm", "clout", "tosca", "puccini"]
+
+[dependencies]
+compris = "0.0.3"
+kutil-cli = { version = "0.0.4", features = ["derive"] }
+kutil-std = "0.0.2"
+ordered-float = { optional = true, version = "4.6.0" }
+thiserror = "2.0.11"
+tracing = "0.1.41"
+# https://docs.rs/wasmtime/latest/wasmtime/index.html#crate-features
+wasmtime = { optional = true, version = "29.0.1", default-features = false, features = [
+    "cranelift",
+    "parallel-compilation",
+    "signals-based-traps",
+] }
+wasmtime-wasi = { optional = true, version = "29.0.1" }
+
+[features]
+plugins = ["dep:ordered-float", "dep:wasmtime", "dep:wasmtime-wasi"]
+wasm_debug = [
+    "wasmtime/demangle",
+    "wasmtime/profiling",
+    "wasmtime/coredump",
+    "wasmtime/addr2line",
+    "wasmtime/debug-builtins",
+]

@@ -1,0 +1,22 @@
+[package]
+edition = "2021"
+
+name = "khutulun-plugin-sdk"
+description = "TOSCA"
+version = "0.0.1"
+rust-version = "1.84"
+
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/tliron/rust-khutulun"
+documentation = "https://docs.rs/khutulun"
+authors = ["Tal Liron"]
+
+readme = "../../README.md"
+
+categories = []                                                            # https://crates.io/category_slugs
+keywords = ["cloud", "orchestration", "wasm", "clout", "tosca", "puccini"]
+
+[dependencies]
+duplicate = "2.0.0"
+ordered-float = "4.6.0"
+wit-bindgen = "0.38.0"
